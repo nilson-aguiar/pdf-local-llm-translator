@@ -40,10 +40,30 @@ Coming in Phase B: OCR/VLM fallback for scanned pages and diagrams
 ## Requirements
 
 - [`uv`](https://docs.astral.sh/uv/) (manages Python, deps, and the lockfile).
-- A reachable local model server. For Ollama: pull a model first, e.g.
-  `ollama pull gemma4:e4b` (spec defaults are `qwen2.5:14b` / `qwen2.5-vl`).
-- macOS: weasyprint needs pango (`brew install pango`) — already handled on the
-  dyld path automatically.
+- A reachable local model server (Ollama or vLLM) with a model pulled.
+- macOS system libraries via Homebrew (below). Python deps are handled by `uv`.
+
+### System dependencies (macOS / Homebrew)
+
+```bash
+# Tooling + local model server
+brew install uv ollama
+
+# Phase A (required now): weasyprint's native rendering libs
+brew install pango
+# `uv` auto-adds Homebrew's lib dir to the dyld path, so no manual env needed.
+
+# Phase B (optional, for OCR/VLM fallback and the typst PDF engine)
+brew install tesseract tesseract-lang poppler typst
+
+# Pull a model (only gemma4:e4b needed to run Phase A locally)
+ollama pull gemma4:e4b
+# Spec defaults (pull if you want them): qwen2.5:14b (chat), qwen2.5-vl (VLM)
+```
+
+On Linux, install the equivalents with your package manager (e.g.
+`apt install libpango-1.0-0 libpangocairo-1.0-0 tesseract-ocr poppler-utils`) and
+pull models the same way.
 
 ## Install & run
 
